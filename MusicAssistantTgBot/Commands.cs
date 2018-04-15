@@ -20,13 +20,13 @@ namespace MusicAssistantTgBot
         const string Start = "/start";
         const string Back = "Go back to main menu";
         const string Help = "/help";
-        const string SearchFormMusic = "Search for music";
+        const string SearchForMusic = "Search for music";
         const string SearchForAlbums = "Search for albums";
-        const string SearchFormArtists = "Search for artists";
+        const string SearchForArtists = "Search for artists";
         const string GetRandomMusic = "Get some good music";
         #endregion
 
-        static string[] commands = { Start, Back, Help, SearchForAlbums, SearchFormArtists, SearchFormMusic, GetRandomMusic };
+        static string[] commands = { Start, Back, Help, SearchForAlbums, SearchForArtists, SearchForMusic, GetRandomMusic };
         static List<string> commandList = new List<string>(commands);
 
         public static bool CheckIfMessageIsCommand(string command)
@@ -53,8 +53,11 @@ namespace MusicAssistantTgBot
                 case Back:
                     Command_Back(telegramBot, cid); break;
 
-                case SearchFormMusic:
-                    Command_SearchFormMusic(telegramBot, cid); break;
+                case SearchForMusic:
+                    Command_SearchForMusic(telegramBot, cid); break;
+
+                case SearchForAlbums:
+                    Command_SearchForAlbum(telegramBot, cid); break;
 
                 default:
                     break;
@@ -68,6 +71,10 @@ namespace MusicAssistantTgBot
             {
                 case 1:
                     Response_Song(telegramBot, cid, extension);
+                    break;
+
+                case 2:
+                    Response_Album(telegramBot, cid, extension);
                     break;
 
                 default:
@@ -88,7 +95,7 @@ namespace MusicAssistantTgBot
             {
                                 new KeyboardButton[]
                                 {
-                                   new KeyboardButton(SearchFormMusic),
+                                    new KeyboardButton(SearchForMusic),
                                     new KeyboardButton(SearchForAlbums)
                                 },
                                 new KeyboardButton[]
@@ -112,7 +119,7 @@ namespace MusicAssistantTgBot
             {
                                 new KeyboardButton[]
                                 {
-                                    new KeyboardButton(SearchFormMusic),
+                                    new KeyboardButton(SearchForMusic),
                                     new KeyboardButton(SearchForAlbums)
                                 },
                                 new KeyboardButton[]
@@ -126,7 +133,7 @@ namespace MusicAssistantTgBot
                ParseMode.Default, false, false, 0, markup);
         }
 
-        private static async void Command_SearchFormMusic
+        private static async void Command_SearchForMusic
             (TelegramBotClient telegramBot, long cid)
         {
             searchArea = 1;
@@ -143,6 +150,26 @@ namespace MusicAssistantTgBot
             #endregion
 
             await telegramBot.SendTextMessageAsync(cid, "Enter song name, sir! 🎵",
+                ParseMode.Default, false, false, 0, markup);
+        }
+
+        private static async void Command_SearchForAlbum
+            (TelegramBotClient telegramBot, long cid)
+        {
+            searchArea = 2;
+
+            #region markup settings
+            markup.ResizeKeyboard = true;
+            markup.Keyboard = new KeyboardButton[][]
+            {
+                                new KeyboardButton[]
+                                {
+                                    new KeyboardButton(Back)
+                                }
+            };
+            #endregion
+
+            await telegramBot.SendTextMessageAsync(cid, "Enter album name, sir! 🎵",
                 ParseMode.Default, false, false, 0, markup);
         }
 
@@ -197,6 +224,13 @@ namespace MusicAssistantTgBot
                 await telegramBot.SendTextMessageAsync
                         (cid, "Something went wrong, please, try again later 😔");
             }
+        }
+
+        private static async void Response_Album
+            (TelegramBotClient telegramBot, long cid, string extension)
+        {
+            await telegramBot.SendTextMessageAsync
+                       (cid, "Wait a bit, we're doing some magic ✨🔮");
         }
     }
 }
