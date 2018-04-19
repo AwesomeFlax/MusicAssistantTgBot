@@ -4,17 +4,17 @@ using Telegram.Bot.Types.Enums;
 
 namespace MusicAssistantTgBot
 {
-    class Program
+    public static class Program
     {
-        static string token = @"559385508:AAF7DD82jmTyI2UfA8osYnrWGtmVtjXwmYE";
-        static TelegramBotClient telegramBot = new TelegramBotClient(token);
+        private const string Token = @"559385508:AAF7DD82jmTyI2UfA8osYnrWGtmVtjXwmYE";
+        private static readonly TelegramBotClient TelegramBot = new TelegramBotClient(Token);
 
-        static void Main(string[] args)
+        private static void Main()
         {
             Console.WriteLine("Bot is ready to help you");
 
-            telegramBot.StartReceiving();
-            telegramBot.OnMessage += TelegramBot_OnMessage;
+            TelegramBot.StartReceiving();
+            TelegramBot.OnMessage += TelegramBot_OnMessage;
             Console.ReadLine();
         }
 
@@ -27,15 +27,15 @@ namespace MusicAssistantTgBot
                 var name = e.Message.From.FirstName + " " + e.Message.From.LastName;
                 var uid = e.Message.From.Id;
 
-                Console.WriteLine("{1} - {2} : {3}", DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), uid, name, txt);
+                Console.WriteLine("{0} - {1} : {2}", uid, name, txt);
 
                 if (Commands.CheckIfMessageIsCommand(txt))
                 {
-                    Commands.GetCommand(txt, telegramBot, cid);
+                    Commands.GetCommand(txt, TelegramBot, cid);
                 }
                 else
                 {
-                    Commands.GetParametres(txt, telegramBot, cid);
+                    Commands.GetParametres(txt, TelegramBot, cid);
                 }
             }
         }

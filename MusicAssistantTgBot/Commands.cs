@@ -10,64 +10,64 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MusicAssistantTgBot
 {
-    static class Commands
+    internal static class Commands
     {
-        static ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
-        static int searchArea = 0;
-        const string baseLink = "http://musicrestwebapi.azurewebsites.net/";
+        private static readonly ReplyKeyboardMarkup Markup = new ReplyKeyboardMarkup();
+        private static int _searchArea;
+        private const string BaseLink = "http://musicrestwebapi.azurewebsites.net/";
 
         #region Commands strings
-        const string Start = "/start";
-        const string Back = "Go back to main menu";
-        const string Help = "/help";
-        const string SearchForMusic = "Search for music";
-        const string SearchForAlbums = "Search for albums";
-        const string SearchForArtists = "Search for artists";
-        const string GetRandomMusic = "Get some good music";
+        
+        private const string Start = "/start";
+        private const string Back = "Go back to main menu";
+        private const string Help = "/help";
+        private const string SearchForMusic = "Search for music";
+        private const string SearchForAlbums = "Search for albums";
+        private const string SearchForArtists = "Search for artists";
+        private const string GetRandomMusic = "Get some good music";
+        
         #endregion
 
-        static string[] commands = { Start, Back, Help, SearchForAlbums, SearchForArtists, SearchForMusic, GetRandomMusic };
-        static List<string> commandList = new List<string>(commands);
+        private static readonly string[] commands =
+        {
+            Start, Back, Help, SearchForAlbums, SearchForArtists, SearchForMusic, GetRandomMusic
+        };
+        private static readonly List<string> CommandList = new List<string>(commands);
 
         public static bool CheckIfMessageIsCommand(string command)
         {
-            if (commandList.Contains(command))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return CommandList.Contains(command);
         }
 
-
-        public static void GetCommand
-            (string command, TelegramBotClient telegramBot, long cid)
+        public static void GetCommand(string command, TelegramBotClient telegramBot, long cid)
         {
             switch (command)
             {
                 case Start:
-                    Command_Start(telegramBot, cid); break;
+                    Command_Start(telegramBot, cid);
+                    break;
 
                 case Back:
-                    Command_Back(telegramBot, cid); break;
+                    Command_Back(telegramBot, cid);
+                    break;
 
                 case SearchForMusic:
-                    Command_SearchForMusic(telegramBot, cid); break;
+                    Command_SearchForMusic(telegramBot, cid);
+                    break;
 
                 case SearchForAlbums:
-                    Command_SearchForAlbum(telegramBot, cid); break;
-
-                default:
+                    Command_SearchForAlbum(telegramBot, cid);
+                    break;
+                
+                case SearchForArtists:
+                    Command_SearchForArtist(telegramBot, cid);
                     break;
             }
         }
 
-        public static void GetParametres
-            (string extension, TelegramBotClient telegramBot, long cid)
+        public static void GetParametres(string extension, TelegramBotClient telegramBot, long cid)
         {
-            switch (searchArea)
+            switch (_searchArea)
             {
                 case 1:
                     Response_Song(telegramBot, cid, extension);
@@ -76,6 +76,10 @@ namespace MusicAssistantTgBot
                 case 2:
                     Response_Album(telegramBot, cid, extension);
                     break;
+                
+                case 3:
+                    Response_Artist(telegramBot, cid, extension);
+                    break;
 
                 default:
                     telegramBot.SendTextMessageAsync
@@ -83,99 +87,111 @@ namespace MusicAssistantTgBot
                     break;
             }
         }
-
-
-        private static async void Command_Start
-            (TelegramBotClient telegramBot, long cid)
+        
+        private static async void Command_Start(ITelegramBotClient telegramBot, long cid)
         {
-            searchArea = 0;
+            _searchArea = 0;
 
-            markup.ResizeKeyboard = true;
-            markup.Keyboard = new KeyboardButton[][]
+            Markup.ResizeKeyboard = true;
+            Markup.Keyboard = new[]
             {
-                                new KeyboardButton[]
+                                new[]
                                 {
                                     new KeyboardButton(SearchForMusic),
                                     new KeyboardButton(SearchForAlbums)
                                 },
-                                new KeyboardButton[]
+                                new[]
                                 {
-                                    new KeyboardButton(SearchForAlbums),
+                                    new KeyboardButton(SearchForArtists),
                                     new KeyboardButton(GetRandomMusic)
                                 }
             };
 
             await telegramBot.SendTextMessageAsync(cid, "Ok, lets do this 😈",
-                ParseMode.Default, false, false, 0, markup);
+                ParseMode.Default, false, false, 0, Markup);
         }
 
-        private static async void Command_Back
-            (TelegramBotClient telegramBot, long cid)
+        private static async void Command_Back(ITelegramBotClient telegramBot, long cid)
         {
-            searchArea = 0;
+            _searchArea = 0;
 
-            markup.ResizeKeyboard = true;
-            markup.Keyboard = new KeyboardButton[][]
+            Markup.ResizeKeyboard = true;
+            Markup.Keyboard = new[]
             {
-                                new KeyboardButton[]
+                                new[]
                                 {
                                     new KeyboardButton(SearchForMusic),
                                     new KeyboardButton(SearchForAlbums)
                                 },
-                                new KeyboardButton[]
+                                new[]
                                 {
-                                    new KeyboardButton(SearchForAlbums),
+                                    new KeyboardButton(SearchForArtists),
                                     new KeyboardButton(GetRandomMusic)
                                 }
             };
 
             await telegramBot.SendTextMessageAsync(cid, "I'm ready to serve you 😉",
-               ParseMode.Default, false, false, 0, markup);
+               ParseMode.Default, false, false, 0, Markup);
         }
 
-        private static async void Command_SearchForMusic
-            (TelegramBotClient telegramBot, long cid)
+        private static async void Command_SearchForMusic(ITelegramBotClient telegramBot, long cid)
         {
-            searchArea = 1;
+            _searchArea = 1;
 
             #region markup settings
-            markup.ResizeKeyboard = true;
-            markup.Keyboard = new KeyboardButton[][]
+            Markup.ResizeKeyboard = true;
+            Markup.Keyboard = new[]
             {
-                                new KeyboardButton[]
-                                {
-                                    new KeyboardButton(Back)
-                                }
+                new[]
+                {
+                    new KeyboardButton(Back)
+                }
             };
             #endregion
 
             await telegramBot.SendTextMessageAsync(cid, "Enter song name, sir! 🎵",
-                ParseMode.Default, false, false, 0, markup);
+                ParseMode.Default, false, false, 0, Markup);
         }
 
-        private static async void Command_SearchForAlbum
-            (TelegramBotClient telegramBot, long cid)
+        private static async void Command_SearchForAlbum(ITelegramBotClient telegramBot, long cid)
         {
-            searchArea = 2;
+            _searchArea = 2;
 
             #region markup settings
-            markup.ResizeKeyboard = true;
-            markup.Keyboard = new KeyboardButton[][]
+            Markup.ResizeKeyboard = true;
+            Markup.Keyboard = new[]
             {
-                                new KeyboardButton[]
-                                {
-                                    new KeyboardButton(Back)
-                                }
+                new[]
+                {
+                    new KeyboardButton(Back)
+                }
             };
             #endregion
 
             await telegramBot.SendTextMessageAsync(cid, "Enter album name, sir! 🎵",
-                ParseMode.Default, false, false, 0, markup);
+                ParseMode.Default, false, false, 0, Markup);
+        }
+        
+        private static async void Command_SearchForArtist(ITelegramBotClient telegramBot, long cid)
+        {
+            _searchArea = 3;
+
+            #region markup settings
+            Markup.ResizeKeyboard = true;
+            Markup.Keyboard = new[]
+            {
+                new[]
+                {
+                    new KeyboardButton(Back)
+                }
+            };
+            #endregion
+
+            await telegramBot.SendTextMessageAsync(cid, "Enter artist name, sir! 🎵",
+                ParseMode.Default, false, false, 0, Markup);
         }
 
-
-        private static async void Response_Song
-            (TelegramBotClient telegramBot, long cid, string extension)
+        private static async void Response_Song(ITelegramBotClient telegramBot, long cid, string extension)
         {
             try
             {
@@ -183,31 +199,34 @@ namespace MusicAssistantTgBot
                         (cid, "Wait a bit, we're doing some magic ✨🔮");
 
                 var songs = JsonConvert.DeserializeObject<List<Song>>
-                    (new WebClient().DownloadString(baseLink + "songs"));
+                    (new WebClient().DownloadString(BaseLink + "songs"));
 
-                var fitSongs = songs
+                var fittingSongs = songs
                     .Where(s => s.name.ToLower().Contains(extension.ToLower()))
                     .ToList();
 
-                StringBuilder botResponse = new StringBuilder();
-                foreach (var fitSong in fitSongs)
+                var botResponse = new List<string>();
+                
+                foreach (var fittingSong in fittingSongs)
                 {
-                    string youTubeLink = new WebClient().DownloadString(baseLink + "songs/" + fitSong.id + "/youtube").Trim('"');
+                    var youTubeLink = new WebClient().DownloadString(BaseLink + "songs/" + fittingSong.id + "/youtube").Trim('"');
 
                     var album = JsonConvert.DeserializeObject<Album>
-                        (new WebClient().DownloadString(baseLink + "albums/" + fitSong.album.id));
+                        (new WebClient().DownloadString(BaseLink + "albums/" + fittingSong.album.id));
 
                     var artist = JsonConvert.DeserializeObject<Artist>
-                        (new WebClient().DownloadString(baseLink + "artists/" + album.artist.id));
-
-                    botResponse.Append(artist.nickName + " — " + fitSong.name);
-                    botResponse.Append(" (" + youTubeLink + ")" + "\n");
+                        (new WebClient().DownloadString(BaseLink + "artists/" + album.artist.id));
+                    
+                    botResponse.Add($"{artist.nickName} - {fittingSong.name}\n"+
+                                    $"({youTubeLink})\n");
                 }
 
-                if (botResponse.Length > 0)
+                if (botResponse.Count > 0)
                 {
-                    await telegramBot.SendTextMessageAsync
-                        (cid, botResponse.ToString());
+                    foreach (var message in botResponse)
+                    {
+                        await telegramBot.SendTextMessageAsync(cid, message);
+                    }
                 }
                 else
                 {
@@ -215,7 +234,7 @@ namespace MusicAssistantTgBot
                         (cid, "Sorry, we didn't find at least one song with such name in our database 😱");
                 }
 
-                searchArea = 0;
+                _searchArea = 0;
             }
             catch (Exception ex)
             {
@@ -226,11 +245,105 @@ namespace MusicAssistantTgBot
             }
         }
 
-        private static async void Response_Album
-            (TelegramBotClient telegramBot, long cid, string extension)
+        private static async void Response_Album(ITelegramBotClient telegramBot, long cid, string extension)
         {
-            await telegramBot.SendTextMessageAsync
-                       (cid, "Wait a bit, we're doing some magic ✨🔮");
+            try
+            {
+                await telegramBot.SendTextMessageAsync
+                    (cid, "Wait a bit, we're doing some magic ✨🔮");
+
+                var albums = JsonConvert.DeserializeObject<List<Album>>
+                    (new WebClient().DownloadString(BaseLink + "albums"));
+
+                var fittingAlbums = albums
+                    .Where(a => a.name.ToLower().Contains(extension.ToLower()))
+                    .ToList();
+
+                var botResponse = new List<string>();
+
+                foreach (var fittingAlbum in fittingAlbums)
+                {   
+                    botResponse.Add($"Album Name: {fittingAlbum.name}\n" +
+                                    $"Genre: {fittingAlbum.genre}\n" +
+                                    $"Date of Release: {fittingAlbum.releaseDate}\n" +
+                                    $"Description: {fittingAlbum.description}\n" +
+                                    $"Artist Name: {fittingAlbum.artist.nickName}\n" +
+                                    $"{fittingAlbum.albumCoverUrl}\n");
+                }
+                
+                if (botResponse.Count > 0)
+                {
+                    foreach (var message in botResponse)
+                    {
+                        await telegramBot.SendTextMessageAsync(cid, message);
+                    }
+                }
+                else
+                {
+                    await telegramBot.SendTextMessageAsync
+                        (cid, "Sorry, we didn't find at least one album with such name in our database 😱");
+                }
+
+                _searchArea = 0;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: ({0}) - {1}", DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), e.Message);
+
+                await telegramBot.SendTextMessageAsync
+                    (cid, "Something went wrong, please, try again later 😔");
+            }
+        }
+        
+        private static async void Response_Artist(ITelegramBotClient telegramBot, long cid, string extension)
+        {
+            try
+            {
+                await telegramBot.SendTextMessageAsync
+                    (cid, "Wait a bit, we're doing some magic ✨🔮");
+                
+                var artists = JsonConvert.DeserializeObject<List<Artist>>
+                    (new WebClient().DownloadString(BaseLink + "artists"));
+
+                var fittingArtists = artists
+                    .Where(a => a.nickName.ToLower().Contains(extension.ToLower()))
+                    .ToList();
+
+                var botResponse = new List<string>();
+                
+                foreach (var fittingArtist in fittingArtists)
+                {   
+                    botResponse.Add($"Nickname: {fittingArtist.nickName}\n" +
+                                    $"First Name: {fittingArtist.firstName}\n" +
+                                    $"Last Name: {fittingArtist.lastName}\n" +
+                                    $"Birth Date: {fittingArtist.birthDate}\n" +
+                                    $"Birth Place: {fittingArtist.birthPlace}\n" +
+                                    $"Years Active: {fittingArtist.careerStart} - {fittingArtist.careerEnd}\n" +
+                                    $"{fittingArtist.artistPhotoUrl}\n");
+                }
+                
+                if (botResponse.Count > 0)
+                {
+                    foreach (var message in botResponse)
+                    {
+                        await telegramBot.SendTextMessageAsync(cid, message);
+                    }
+                }
+                else
+                {
+                    await telegramBot.SendTextMessageAsync
+                        (cid, "Sorry, we didn't find at least one artist with such name in our database 😱");
+                }
+
+                _searchArea = 0;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: ({0}) - {1}", DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString(), e.Message);
+                
+                await telegramBot.SendTextMessageAsync
+                    (cid, "Something went wrong, please, try again later 😔");
+            }
         }
     }
 }
