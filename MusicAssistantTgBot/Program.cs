@@ -29,7 +29,7 @@ namespace MusicAssistantTgBot
 
                 Console.WriteLine("Inline button has been pressed at " + mid);
 
-                Commands.GetInline(data, TelegramBot, cid, mid);
+                Management.GetInline(data, TelegramBot, cid, mid);
             }
         }
 
@@ -47,11 +47,11 @@ namespace MusicAssistantTgBot
 
                 if (Commands.CheckIfMessageIsCommand(txt))
                 {
-                    Commands.GetCommand(txt, TelegramBot, cid, mid);
+                    Management.GetCommand(txt, TelegramBot, cid, mid);
                 }
                 else
                 {
-                    Commands.GetParametres(txt, TelegramBot, cid, mid);
+                    Management.GetParametres(txt, TelegramBot, cid, mid);
                 }
             }
         }
