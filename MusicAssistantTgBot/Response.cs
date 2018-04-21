@@ -5,6 +5,7 @@ using System.Net;
 using MusicAssistantTgBot.Models;
 using Newtonsoft.Json;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace MusicAssistantTgBot
@@ -37,15 +38,18 @@ namespace MusicAssistantTgBot
                     var artist = JsonConvert.DeserializeObject<Artist>
                         (new WebClient().DownloadString(BaseLink + "artists/" + album.artist.id));
 
-                    botResponse.Add($"<b>[1/{fittingSongs.Count}]</b>" +
-                                    $"{artist.nickName} - {fittingSong.name}\n" +
+                    botResponse.Add($"{artist.nickName} - {fittingSong.name}\n" +
                                     $"({youTubeLink})\n");
                 }
 
                 if (botResponse.Count > 0)
                 {
-                    await telegramBot.SendTextMessageAsync(cid, botResponse[0],
+                    string paginationNumeric = "<b>[1/" + fittingSongs.Count + "] </b>";
+
+                    Message respondMsg = await telegramBot.SendTextMessageAsync(cid, paginationNumeric + botResponse[0],
                         ParseMode.Html, false, false, 0, Inline);
+
+                    Program.paginationHistory.AddInList(new HistoryObject(respondMsg.Chat.Id, respondMsg.MessageId, botResponse));
                 }
                 else
                 {
@@ -53,7 +57,17 @@ namespace MusicAssistantTgBot
                         (cid, "Sorry, we didn't find at least one song with such name in our database 😱");
                 }
 
-                SearchArea = 0;
+                #region SearchAreaSession
+                if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+                {
+                    Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
+                    SearchArea.Add(new _SearchArea(0, cid));
+                }
+                else
+                {
+                    SearchArea.Single(x => x.chatId == cid).area = 0;
+                } 
+                #endregion
             }
             catch (Exception ex)
             {
@@ -103,7 +117,17 @@ namespace MusicAssistantTgBot
                         (cid, "Sorry, we didn't find at least one album with such name in our database 😱");
                 }
 
-                SearchArea = 0;
+                #region SearchAreaSession
+                if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+                {
+                    Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
+                    SearchArea.Add(new _SearchArea(0, cid));
+                }
+                else
+                {
+                    SearchArea.Single(x => x.chatId == cid).area = 0;
+                } 
+                #endregion
             }
             catch (Exception e)
             {
@@ -154,7 +178,17 @@ namespace MusicAssistantTgBot
                         (cid, "Sorry, we didn't find at least one artist with such name in our database 😱");
                 }
 
-                SearchArea = 0;
+                #region SearchAreaSession
+                if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+                {
+                    Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
+                    SearchArea.Add(new _SearchArea(0, cid));
+                }
+                else
+                {
+                    SearchArea.Single(x => x.chatId == cid).area = 0;
+                } 
+                #endregion
             }
             catch (Exception e)
             {

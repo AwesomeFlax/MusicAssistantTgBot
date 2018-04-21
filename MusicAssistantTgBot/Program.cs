@@ -8,14 +8,15 @@ namespace MusicAssistantTgBot
     {
         private const string Token = @"559385508:AAF7DD82jmTyI2UfA8osYnrWGtmVtjXwmYE";
         private static readonly TelegramBotClient TelegramBot = new TelegramBotClient(Token);
+        public static PaginationHistory paginationHistory = PaginationHistory.getInstance();
 
         private static void Main()
         {
-            Console.WriteLine("Bot is ready to help you");
-
             TelegramBot.StartReceiving();
             TelegramBot.OnMessage += TelegramBot_OnMessage;
             TelegramBot.OnCallbackQuery += TelegramBot_OnCallbackQuery;
+
+            Console.WriteLine("Bot is ready to help you");
             Console.ReadLine();
         }
 
@@ -26,10 +27,11 @@ namespace MusicAssistantTgBot
                 var cid = e.CallbackQuery.Message.Chat.Id;
                 var data = e.CallbackQuery.Data;
                 var mid = e.CallbackQuery.Message.MessageId;
+                var text = e.CallbackQuery.Message.Text;
 
                 Console.WriteLine("Inline button has been pressed at " + mid);
 
-                Management.GetInline(data, TelegramBot, cid, mid);
+                Management.GetInline(data, TelegramBot, cid, mid, text);
             }
         }
 

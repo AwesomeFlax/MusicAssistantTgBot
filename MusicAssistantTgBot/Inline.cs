@@ -5,14 +5,39 @@ namespace MusicAssistantTgBot
 {
     public class Inline : Management
     {
-        public static async void Inline_Next(string command, ITelegramBotClient telegramBot, long cid, int mid)
+        public static async void Inline_Next(ITelegramBotClient telegramBot, long cid, int mid, string text)
         {
-            await telegramBot.EditMessageTextAsync(cid, mid, "updated next", ParseMode.Default, false, Inline);
+            var pagesInfo = text.Substring(text.IndexOf('[') + 1, text.IndexOf(']') - 1);
+            var parts = pagesInfo.Split('/');
+
+            if (parts[0] != parts[1])
+            {
+                int nextIndex = int.Parse(parts[0]) + 1;
+                int quantity = int.Parse(parts[1]);
+
+                var nextResult = PaginationHistory.getInstance().GetByMessageId(mid).ToArray();
+                string message = "<b>[" + nextIndex + "/" + quantity + "] </b>" + nextResult[nextIndex - 1];
+
+                await telegramBot.EditMessageTextAsync(cid, mid, message, ParseMode.Html, false, Inline);
+            }
+
         }
 
-        public static async void Inline_Previous(string command, ITelegramBotClient telegramBot, long cid, int mid)
+        public static async void Inline_Previous(ITelegramBotClient telegramBot, long cid, int mid, string text)
         {
-            await telegramBot.EditMessageTextAsync(cid, mid, "updated prev", ParseMode.Default, false, Inline);
+            var pagesInfo = text.Substring(text.IndexOf('[') + 1, text.IndexOf(']') - 1);
+            var parts = pagesInfo.Split('/');
+
+            if (parts[0] != "1")
+            {
+                int prevIndex = int.Parse(parts[0]) - 1;
+                int quantity = int.Parse(parts[1]);
+
+                var nextResult = PaginationHistory.getInstance().GetByMessageId(mid).ToArray();
+                string message = "<b>[" + prevIndex + "/" + quantity + "] </b>" + nextResult[prevIndex - 1];
+
+                await telegramBot.EditMessageTextAsync(cid, mid, message, ParseMode.Html, false, Inline);
+            }
         }
     }
 }

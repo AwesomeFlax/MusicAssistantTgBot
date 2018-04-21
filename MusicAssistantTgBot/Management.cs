@@ -1,4 +1,6 @@
-﻿using Telegram.Bot;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MusicAssistantTgBot
@@ -6,7 +8,7 @@ namespace MusicAssistantTgBot
     public class Management
     {
         protected static readonly InlineKeyboardMarkup Inline = new InlineKeyboardMarkup(GetInlineKeyboard(new[] { Previous, Next }));
-        protected static int SearchArea;
+        protected static List<_SearchArea> SearchArea = new List<_SearchArea>();
         protected const string BaseLink = "http://musicrestwebapi.azurewebsites.net/";
 
         #region Commands strings
@@ -66,7 +68,7 @@ namespace MusicAssistantTgBot
 
         public static void GetParametres(string extension, TelegramBotClient telegramBot, long cid, int mid)
         {
-            switch (SearchArea)
+            switch (SearchArea.Single(x => x.chatId == cid).area)
             {
                 case 1:
                     Response.Response_Song(telegramBot, cid, mid, extension);
@@ -87,16 +89,16 @@ namespace MusicAssistantTgBot
             }
         }
 
-        public static void GetInline(string command, TelegramBotClient telegramBot, long cid, int mid)
+        public static void GetInline(string command, TelegramBotClient telegramBot, long cid, int mid, string text)
         {
             switch (command)
             {
                 case Next:
-                    MusicAssistantTgBot.Inline.Inline_Next(command, telegramBot, cid, mid);
+                    MusicAssistantTgBot.Inline.Inline_Next(telegramBot, cid, mid, text);
                     break;
 
                 case Previous:
-                    MusicAssistantTgBot.Inline.Inline_Previous(command, telegramBot, cid, mid);
+                    MusicAssistantTgBot.Inline.Inline_Previous(telegramBot, cid, mid, text);
                     break;
             }
         }

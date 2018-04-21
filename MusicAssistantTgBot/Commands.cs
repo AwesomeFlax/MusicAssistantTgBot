@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -23,8 +25,18 @@ namespace MusicAssistantTgBot
         
         public static async void Command_Start(ITelegramBotClient telegramBot, long cid)
         {
-            SearchArea = 0;
+            #region SearchAreaSession
+            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            {
+                SearchArea.Add(new _SearchArea(0, cid));
+            }
+            else
+            {
+                SearchArea.Single(x => x.chatId == cid).area = 0;
+            }
+            #endregion
 
+            #region markup settings
             Markup.ResizeKeyboard = true;
             Markup.Keyboard = new[]
             {
@@ -38,7 +50,8 @@ namespace MusicAssistantTgBot
                                     new KeyboardButton(SearchForArtists),
                                     new KeyboardButton(GetRandomMusic)
                                 }
-            };
+            }; 
+            #endregion
 
             await telegramBot.SendTextMessageAsync(cid, "Ok, lets do this 😈",
                 ParseMode.Default, false, false, 0, Markup);
@@ -46,8 +59,19 @@ namespace MusicAssistantTgBot
 
         public static async void Command_Back(ITelegramBotClient telegramBot, long cid)
         {
-            SearchArea = 0;
+            #region SearchAreaSession
+            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            {
+                Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
+                SearchArea.Add(new _SearchArea(0, cid));
+            }
+            else
+            {
+                SearchArea.Single(x => x.chatId == cid).area = 0;
+            }
+            #endregion
 
+            #region markup settings
             Markup.ResizeKeyboard = true;
             Markup.Keyboard = new[]
             {
@@ -61,7 +85,8 @@ namespace MusicAssistantTgBot
                                     new KeyboardButton(SearchForArtists),
                                     new KeyboardButton(GetRandomMusic)
                                 }
-            };
+            }; 
+            #endregion
 
             await telegramBot.SendTextMessageAsync(cid, "I'm ready to serve you 😉",
                ParseMode.Default, false, false, 0, Markup);
@@ -69,7 +94,17 @@ namespace MusicAssistantTgBot
 
         public static async void Command_SearchForMusic(ITelegramBotClient telegramBot, long cid)
         {
-            SearchArea = 1;
+            #region SearchAreaSession
+            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            {
+                Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
+                SearchArea.Add(new _SearchArea(1, cid));
+            }
+            else
+            {
+                SearchArea.Single(x => x.chatId == cid).area = 1;
+            } 
+            #endregion
 
             #region markup settings
             Markup.ResizeKeyboard = true;
@@ -88,7 +123,17 @@ namespace MusicAssistantTgBot
 
         public static async void Command_SearchForAlbum(ITelegramBotClient telegramBot, long cid)
         {
-            SearchArea = 2;
+            #region SearchAreaSession
+            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            {
+                Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
+                SearchArea.Add(new _SearchArea(2, cid));
+            }
+            else
+            {
+                SearchArea.Single(x => x.chatId == cid).area = 2;
+            } 
+            #endregion
 
             #region markup settings
             Markup.ResizeKeyboard = true;
@@ -107,7 +152,17 @@ namespace MusicAssistantTgBot
 
         public static async void Command_SearchForArtist(ITelegramBotClient telegramBot, long cid)
         {
-            SearchArea = 3;
+            #region SearchAreaSession
+            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            {
+                Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
+                SearchArea.Add(new _SearchArea(3, cid));
+            }
+            else
+            {
+                SearchArea.Single(x => x.chatId == cid).area = 3;
+            } 
+            #endregion
 
             #region markup settings
             Markup.ResizeKeyboard = true;
