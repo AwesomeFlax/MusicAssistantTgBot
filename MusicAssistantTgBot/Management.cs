@@ -9,7 +9,7 @@ namespace MusicAssistantTgBot
     {
         protected static readonly InlineKeyboardMarkup Inline = new InlineKeyboardMarkup(GetInlineKeyboard(new[] { Previous, Refresh, Next }));
         protected static List<_SearchArea> SearchArea = new List<_SearchArea>();
-        protected const string BaseLink = "http://musicrestwebapi.azurewebsites.net/";
+        protected const string BaseLink = "https://music-assistant.azurewebsites.net/";
 
         #region Commands strings
         protected const string Start = "/start";
