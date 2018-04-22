@@ -17,12 +17,7 @@ namespace MusicAssistantTgBot
 
         public static PaginationHistory getInstance()
         {
-            if (Instance == null)
-            {
-                Instance = new PaginationHistory();
-            }
-
-            return Instance;
+            return Instance ?? (Instance = new PaginationHistory());
         }
 
         public List<string> GetByMessageId(int MId)

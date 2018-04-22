@@ -7,7 +7,7 @@ namespace MusicAssistantTgBot
 {
     public class Management
     {
-        protected static readonly InlineKeyboardMarkup Inline = new InlineKeyboardMarkup(GetInlineKeyboard(new[] { Previous, Next }));
+        protected static readonly InlineKeyboardMarkup Inline = new InlineKeyboardMarkup(GetInlineKeyboard(new[] { Previous, Refresh, Next }));
         protected static List<_SearchArea> SearchArea = new List<_SearchArea>();
         protected const string BaseLink = "http://musicrestwebapi.azurewebsites.net/";
 
@@ -21,6 +21,7 @@ namespace MusicAssistantTgBot
         protected const string GetRandomMusic = "Get some good music";
         private const string Next = "➡️";
         private const string Previous = "⬅️";
+        private const string Refresh = "🔄";
         #endregion
 
         private static InlineKeyboardButton[][] GetInlineKeyboard(string[] stringArray)
@@ -63,6 +64,10 @@ namespace MusicAssistantTgBot
                 case SearchForArtists:
                     Commands.Command_SearchForArtist(telegramBot, cid);
                     break;
+                
+                case GetRandomMusic:
+                    Commands.Command_GetRandomMusic(telegramBot, cid);
+                    break;
             }
         }
 
@@ -71,7 +76,7 @@ namespace MusicAssistantTgBot
             switch (SearchArea.Single(x => x.chatId == cid).area)
             {
                 case 1:
-                    Response.Response_Song(telegramBot, cid, mid, extension);
+                    Response.Response_Song(telegramBot, cid, extension);
                     break;
 
                 case 2:
@@ -80,6 +85,10 @@ namespace MusicAssistantTgBot
 
                 case 3:
                     Response.Response_Artist(telegramBot, cid, extension);
+                    break;
+                
+                case 4:
+                    Response.Response_RandomMusic(telegramBot, cid, extension);
                     break;
 
                 default:
@@ -97,6 +106,10 @@ namespace MusicAssistantTgBot
                     MusicAssistantTgBot.Inline.Inline_Next(telegramBot, cid, mid, text);
                     break;
 
+                case Refresh:
+                    MusicAssistantTgBot.Inline.Inline_Refresh(telegramBot, cid, mid, text);
+                    break;
+                
                 case Previous:
                     MusicAssistantTgBot.Inline.Inline_Previous(telegramBot, cid, mid, text);
                     break;

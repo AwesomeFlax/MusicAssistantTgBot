@@ -26,7 +26,7 @@ namespace MusicAssistantTgBot
         public static async void Command_Start(ITelegramBotClient telegramBot, long cid)
         {
             #region SearchAreaSession
-            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            if (SearchArea.All(x => x.chatId != cid))
             {
                 Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
                 SearchArea.Add(new _SearchArea(0, cid));
@@ -61,7 +61,7 @@ namespace MusicAssistantTgBot
         public static async void Command_Back(ITelegramBotClient telegramBot, long cid)
         {
             #region SearchAreaSession
-            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            if (SearchArea.All(x => x.chatId != cid))
             {
                 Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
                 SearchArea.Add(new _SearchArea(0, cid));
@@ -96,7 +96,7 @@ namespace MusicAssistantTgBot
         public static async void Command_SearchForMusic(ITelegramBotClient telegramBot, long cid)
         {
             #region SearchAreaSession
-            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            if (SearchArea.All(x => x.chatId != cid))
             {
                 Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
                 SearchArea.Add(new _SearchArea(1, cid));
@@ -125,7 +125,7 @@ namespace MusicAssistantTgBot
         public static async void Command_SearchForAlbum(ITelegramBotClient telegramBot, long cid)
         {
             #region SearchAreaSession
-            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            if (SearchArea.All(x => x.chatId != cid))
             {
                 Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
                 SearchArea.Add(new _SearchArea(2, cid));
@@ -154,7 +154,7 @@ namespace MusicAssistantTgBot
         public static async void Command_SearchForArtist(ITelegramBotClient telegramBot, long cid)
         {
             #region SearchAreaSession
-            if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
+            if (SearchArea.All(x => x.chatId != cid))
             {
                 Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
                 SearchArea.Add(new _SearchArea(3, cid));
@@ -177,6 +177,35 @@ namespace MusicAssistantTgBot
             #endregion
 
             await telegramBot.SendTextMessageAsync(cid, "Enter artist name, sir! 💃🏼",
+                ParseMode.Default, false, false, 0, Markup);
+        }
+
+        public static async void Command_GetRandomMusic(TelegramBotClient telegramBot, long cid)
+        {
+            #region SearchAreaSession
+            if (SearchArea.All(x => x.chatId != cid))
+            {
+                Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
+                SearchArea.Add(new _SearchArea(4, cid));
+            }
+            else
+            {
+                SearchArea.Single(x => x.chatId == cid).area = 4;
+            } 
+            #endregion
+
+            #region markup settings
+            Markup.ResizeKeyboard = true;
+            Markup.Keyboard = new[]
+            {
+                new[]
+                {
+                    new KeyboardButton(Back)
+                }
+            };
+            #endregion
+
+            await telegramBot.SendTextMessageAsync(cid, "Enter music genre to get awesome collection! 👑",
                 ParseMode.Default, false, false, 0, Markup);
         }
     }

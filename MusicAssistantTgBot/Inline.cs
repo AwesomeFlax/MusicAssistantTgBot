@@ -39,5 +39,10 @@ namespace MusicAssistantTgBot
                 await telegramBot.EditMessageTextAsync(cid, mid, message, ParseMode.Html, false, Inline);
             }
         }
+
+
+        public static async void Inline_Refresh(TelegramBotClient telegramBot, long cid, int mid, string text)
+        {
+        }
     }
 }
