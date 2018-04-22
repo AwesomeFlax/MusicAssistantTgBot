@@ -113,6 +113,7 @@ namespace MusicAssistantTgBot
             {
                 new[]
                 {
+                    new KeyboardButton(SearchForMusic),
                     new KeyboardButton(Back)
                 }
             };
@@ -142,6 +143,7 @@ namespace MusicAssistantTgBot
             {
                 new[]
                 {
+                    new KeyboardButton(SearchForAlbums), 
                     new KeyboardButton(Back)
                 }
             };
@@ -171,6 +173,7 @@ namespace MusicAssistantTgBot
             {
                 new[]
                 {
+                    new KeyboardButton(SearchForArtists), 
                     new KeyboardButton(Back)
                 }
             };
@@ -200,6 +203,7 @@ namespace MusicAssistantTgBot
             {
                 new[]
                 {
+                    new KeyboardButton(GetRandomMusic), 
                     new KeyboardButton(Back)
                 }
             };
