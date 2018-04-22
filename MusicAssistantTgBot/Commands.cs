@@ -28,6 +28,7 @@ namespace MusicAssistantTgBot
             #region SearchAreaSession
             if (SearchArea.Where(x => x.chatId == cid).Count() == 0)
             {
+                Console.WriteLine("For someone in ChatId " + cid + " new session has been created");
                 SearchArea.Add(new _SearchArea(0, cid));
             }
             else
