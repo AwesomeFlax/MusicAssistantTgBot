@@ -7,7 +7,7 @@ namespace MusicAssistantTgBot
 {
     public class Management
     {
-        protected static readonly InlineKeyboardMarkup Inline = new InlineKeyboardMarkup(GetInlineKeyboard(new[] { Previous, Refresh, Next }));
+        protected static readonly InlineKeyboardMarkup Inline = new InlineKeyboardMarkup(GetInlineKeyboard(new[] { Previous, Next }));
         protected static List<_SearchArea> SearchArea = new List<_SearchArea>();
         protected const string BaseLink = "https://music-assistant.azurewebsites.net/";
 
@@ -24,7 +24,7 @@ namespace MusicAssistantTgBot
         private const string Refresh = "🔄";
         #endregion
 
-        private static InlineKeyboardButton[][] GetInlineKeyboard(string[] stringArray)
+        public static InlineKeyboardButton[][] GetInlineKeyboard(string[] stringArray)
         {
             var keyboardInline = new InlineKeyboardButton[1][];
             var keyboardButtons = new InlineKeyboardButton[stringArray.Length];
