@@ -18,7 +18,7 @@ namespace MusicAssistantTgBot
                 await telegramBot.SendTextMessageAsync
                         (cid, "Wait a bit, we're doing some magic ✨🔮");
 
-                var songs = JsonConvert.DeserializeObject<List<Song>>
+                var songs = JsonConvert.DeserializeObject<List<Track>>
                     (new WebClient().DownloadString(BaseLink + "songs"));
 
                 var fittingSongs = songs
@@ -209,7 +209,7 @@ namespace MusicAssistantTgBot
                 await telegramBot.SendTextMessageAsync
                     (cid, "Wait a bit, we're doing some magic ✨🔮");
                 
-                var songs = JsonConvert.DeserializeObject<List<Song>>
+                var songs = JsonConvert.DeserializeObject<List<Track>>
                     (new WebClient().DownloadString(BaseLink + "songs"));
 
                 var fittingSongs = songs
@@ -269,7 +269,7 @@ namespace MusicAssistantTgBot
             }
         }
 
-        private static List<Song> Randomize(List<Song> list)
+        private static List<Track> Randomize(List<Track> list)
         {
             if (list.Count > 5)
             {

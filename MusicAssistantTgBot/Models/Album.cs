@@ -1,18 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace MusicAssistantTgBot.Models
 {
     public class Album
     {
-        public object albumCover { get; set; }
-        public int id { get; set; }
+        [JsonProperty("id")]
+        public long id { get; set; }
+
+        [JsonProperty("artist", NullValueHandling = NullValueHandling.Ignore)]
         public Artist artist { get; set; }
+
+        [JsonProperty("name")]
         public string name { get; set; }
+
+        [JsonProperty("genre")]
         public string genre { get; set; }
-        public DateTime releaseDate { get; set; }
+
+        [JsonProperty("releaseDate")]
+        public DateTimeOffset releaseDate { get; set; }
+
+        [JsonProperty("description")]
         public string description { get; set; }
+
+        [JsonProperty("albumCoverUrl")]
         public string albumCoverUrl { get; set; }
-        public List<Song> tracks { get; set; }
+
+        [JsonProperty("tracks")]
+        public List<Track> tracks { get; set; }
     }
 }
