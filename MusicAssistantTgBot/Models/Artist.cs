@@ -18,16 +18,16 @@ namespace MusicAssistantTgBot.Models
         [JsonProperty("lastName")]
         public string lastName { get; set; }
 
-        [JsonProperty("birthDate")]
+        [JsonProperty("birthDate", NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset birthDate { get; set; }
 
-        [JsonProperty("deathDate")]
+        [JsonProperty("deathDate", NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset deathDate { get; set; }
 
-        [JsonProperty("careerStart")]
+        [JsonProperty("careerStart", NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset careerStart { get; set; }
 
-        [JsonProperty("careerEnd")]
+        [JsonProperty("careerEnd", NullValueHandling = NullValueHandling.Ignore)]
         public DateTimeOffset careerEnd { get; set; }
 
         [JsonProperty("birthPlace")]

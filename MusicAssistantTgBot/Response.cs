@@ -97,7 +97,7 @@ namespace MusicAssistantTgBot
                 {
                     botResponse.Add($"Album Name: {fittingAlbum.name}\n" +
                                     $"Genre: {fittingAlbum.genre}\n" +
-                                    $"Date of Release: {fittingAlbum.releaseDate}\n" +
+                                    $"Date of Release: {fittingAlbum.releaseDate.Date.ToShortDateString()}\n" +
                                     $"Description: {fittingAlbum.description}\n" +
                                     $"Artist Name: {fittingAlbum.artist.nickName}\n" +
                                     $"{fittingAlbum.albumCoverUrl}\n");
@@ -160,9 +160,9 @@ namespace MusicAssistantTgBot
                     botResponse.Add($"Nickname: {fittingArtist.nickName}\n" +
                                     $"First Name: {fittingArtist.firstName}\n" +
                                     $"Last Name: {fittingArtist.lastName}\n" +
-                                    $"Birth Date: {fittingArtist.birthDate}\n" +
+                                    $"Birth Date: {fittingArtist.birthDate.Date.ToShortDateString()}\n" +
                                     $"Birth Place: {fittingArtist.birthPlace}\n" +
-                                    $"Years Active: {fittingArtist.careerStart} - {fittingArtist.careerEnd}\n" +
+                                    $"Years Active: {fittingArtist.careerStart.Date.ToShortDateString()} - {fittingArtist.careerEnd.Date.ToShortDateString()}\n" +
                                     $"{fittingArtist.artistPhotoUrl}\n");
                 }
 
